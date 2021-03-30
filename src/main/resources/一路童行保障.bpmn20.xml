@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="SSUMNRMinor" name="一路童行保障" isExecutable="true">
+    <documentation>一路童行保障</documentation>
+    <startEvent id="doStart" name="开始" flowable:formFieldValidation="true"></startEvent>
+    <userTask id="SSUMNRMinorVerifyreceiving1" name="儿童验证接收，送休息室" flowable:category="ifs" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="candidateUser" type="string" expression="${userVerify}"></flowable:formProperty>
+        <flowable:formProperty id="candidatePhone" type="string" expression="${userPhoneVerify}"></flowable:formProperty>
+        <flowable:formProperty id="candidateManager" type="string" expression="${managerVerify}"></flowable:formProperty>
+        <flowable:formProperty id="managerPhone" type="string" expression="${managerPhoneVerify}"></flowable:formProperty>
+        <flowable:taskListener event="create" class="com.hnair.psmp.workflow.component.listener.WorkFLowTaskListener">
+          <flowable:field name="msgReceiver">
+            <flowable:string><![CDATA[candidateManager]]></flowable:string>
+          </flowable:field>
+        </flowable:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-375CA294-0F9E-4EEC-AC8D-5D53B7AD0F8E" sourceRef="doStart" targetRef="SSUMNRMinorVerifyreceiving1"></sequenceFlow>
+    <userTask id="SSUMNRMinortakePicture1" name="休息室拍照" flowable:category="ifs" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="candidateUserByTask" type="string" default="SSUMNRMinorVerifyreceiving1"></flowable:formProperty>
+        <flowable:taskListener event="create" class="com.hnair.psmp.workflow.component.listener.WorkFLowTaskListener"></flowable:taskListener>
+      </extensionElements>
+    </userTask>
+    <endEvent id="doEnd" name="结束">
+      <extensionElements>
+        <flowable:executionListener event="end" class="com.hnair.psmp.workflow.component.listener.WorkFLowEndListener"></flowable:executionListener>
+      </extensionElements>
+    </endEvent>
+    <userTask id="SSUMNRMinorhandOver1" name="送休息室后移交旅客" flowable:category="ifs" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="candidateUserByTask" type="string" default="SSUMNRMinorVerifyreceiving1"></flowable:formProperty>
+        <flowable:taskListener event="create" class="com.hnair.psmp.workflow.component.listener.WorkFLowTaskListener"></flowable:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="SSUMNRMinorVerifyreceiving2" name="带儿童安检候机、登机" flowable:category="ifs" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="candidateUser" type="string" expression="${userTakeIn}"></flowable:formProperty>
+        <flowable:formProperty id="candidatePhone" type="string" expression="${userPhoneTakeIn}"></flowable:formProperty>
+        <flowable:formProperty id="candidateManager" type="string" expression="${managerTakeIn}"></flowable:formProperty>
+        <flowable:formProperty id="managerPhone" type="string" expression="${managerPhoneTakeIn}"></flowable:formProperty>
+        <flowable:taskListener event="create" class="com.hnair.psmp.workflow.component.listener.WorkFLowTaskListener">
+          <flowable:field name="msgReceiver">
+            <flowable:string><![CDATA[candidateManager]]></flowable:string>
+          </flowable:field>
+        </flowable:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="SSUMNRMinorhandOver2" name="旅客移交乘务" flowable:category="ifs" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="candidateUserByTask" type="string" default="SSUMNRMinorVerifyreceiving2"></flowable:formProperty>
+        <flowable:taskListener event="create" class="com.hnair.psmp.workflow.component.listener.WorkFLowTaskListener"></flowable:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="SSUMNRMinortakePicture2" name="候机厅登机拍照" flowable:category="ifs" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="candidateUserByTask" type="string" default="SSUMNRMinorVerifyreceiving2"></flowable:formProperty>
+        <flowable:taskListener event="create" class="com.hnair.psmp.workflow.component.listener.WorkFLowTaskListener"></flowable:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="SSUMNRMinorVerifyreceiving3" name="机上照料儿童" flowable:category="ifs" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="candidateUser" type="string" expression="${userTakeCareOf}"></flowable:formProperty>
+        <flowable:formProperty id="candidatePhone" type="string" expression="${userPhoneTakeCareOf}"></flowable:formProperty>
+        <flowable:taskListener event="create" expression="com.hnair.psmp.workflow.component.listener.WorkFLowTaskListener"></flowable:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="SSUMNRMinortakePicture3" name="机上旅客拍照" flowable:category="ifs" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="candidateUserByTask" type="string" default="SSUMNRMinorVerifyreceiving3"></flowable:formProperty>
+        <flowable:taskListener event="create" class="com.hnair.psmp.workflow.component.listener.WorkFLowTaskListener"></flowable:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="SSUMNRMinorhandOver3" name="旅客移交目的站地服" flowable:category="ifs" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="candidateUserByTask" type="string" default="SSUMNRMinorVerifyreceiving3"></flowable:formProperty>
+        <flowable:taskListener event="create" class="com.hnair.psmp.workflow.component.listener.WorkFLowTaskListener"></flowable:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="SSUMNRMinorVerifyreceiving4" name="接儿童下机" flowable:category="ifs" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="candidateUser" type="string" expression="${userTakeOff}"></flowable:formProperty>
+        <flowable:formProperty id="candidatePhone" type="string" expression="${userPhoneTakeOff}"></flowable:formProperty>
+        <flowable:formProperty id="candidateManager" type="string" expression="${managerTakeOff}"></flowable:formProperty>
+        <flowable:formProperty id="managerPhone" type="string" expression="${managerPhoneTakeOff}"></flowable:formProperty>
+        <flowable:taskListener event="create" class="com.hnair.psmp.workflow.component.listener.WorkFLowTaskListener">
+          <flowable:field name="msgReceiver">
+            <flowable:string><![CDATA[candidateManager]]></flowable:string>
+          </flowable:field>
+        </flowable:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="SSUMNRMinorhandOver4" name="交接到接机人" flowable:category="ifs" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="candidateUserByTask" type="string" default="SSUMNRMinorVerifyreceiving4"></flowable:formProperty>
+        <flowable:taskListener event="create" class="com.hnair.psmp.workflow.component.listener.WorkFLowTaskListener"></flowable:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="SSUMNRMinortakePicture4" name="下机及移交接机人拍照" flowable:category="ifs" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="candidateUserByTask" type="string" default="SSUMNRMinorVerifyreceiving4"></flowable:formProperty>
+        <flowable:taskListener event="create" class="com.hnair.psmp.workflow.component.listener.WorkFLowTaskListener"></flowable:taskListener>
+      </extensionElements>
+    </userTask>
+    <parallelGateway id="verifyEd" name="验证通过"></parallelGateway>
+    <sequenceFlow id="sid-0D28A301-8B3A-48EE-9DCC-C5DC8EFF9798" sourceRef="verifyEd" targetRef="SSUMNRMinorhandOver1"></sequenceFlow>
+    <parallelGateway id="sid-7BD3EE8E-370C-4C47-B051-E107816BEC3F" name="登机成功"></parallelGateway>
+    <parallelGateway id="sid-187B7884-B7C5-4ACD-BE95-FD7876512EA6" name="准备落地"></parallelGateway>
+    <sequenceFlow id="sid-F5DFB401-A1EF-45A7-8056-1311D1624429" sourceRef="SSUMNRMinorVerifyreceiving3" targetRef="sid-187B7884-B7C5-4ACD-BE95-FD7876512EA6"></sequenceFlow>
+    <parallelGateway id="sid-9BD909EF-8AB3-484C-9789-4790D4A6ED2F" name="落地交接"></parallelGateway>
+    <sequenceFlow id="sid-5443949C-F9CA-4202-BCB5-223F90BA63B3" sourceRef="SSUMNRMinorVerifyreceiving4" targetRef="sid-9BD909EF-8AB3-484C-9789-4790D4A6ED2F"></sequenceFlow>
+    <sequenceFlow id="sid-3DA2E0FA-D41F-4207-87FA-FB26E84C52E6" sourceRef="sid-9BD909EF-8AB3-484C-9789-4790D4A6ED2F" targetRef="SSUMNRMinorhandOver4"></sequenceFlow>
+    <parallelGateway id="sid-25BD3599-0910-453E-A503-11906A62F9D2"></parallelGateway>
+    <sequenceFlow id="sid-6C314929-1038-47B8-969D-E7B570BC0557" sourceRef="sid-25BD3599-0910-453E-A503-11906A62F9D2" targetRef="doEnd"></sequenceFlow>
+    <sequenceFlow id="sid-96D059C1-C487-4192-8903-311BBDC0D4BE" sourceRef="SSUMNRMinortakePicture4" targetRef="sid-25BD3599-0910-453E-A503-11906A62F9D2"></sequenceFlow>
+    <sequenceFlow id="sid-DBF5FA80-D632-42E4-942B-DCBFCCFB3D46" sourceRef="SSUMNRMinortakePicture3" targetRef="sid-25BD3599-0910-453E-A503-11906A62F9D2"></sequenceFlow>
+    <sequenceFlow id="sid-B442584D-8E50-4C0C-8EFA-9495BE07C2AC" sourceRef="SSUMNRMinortakePicture2" targetRef="sid-25BD3599-0910-453E-A503-11906A62F9D2"></sequenceFlow>
+    <sequenceFlow id="sid-766B5FE9-E6C5-4693-8477-3780753E865F" sourceRef="SSUMNRMinortakePicture1" targetRef="sid-25BD3599-0910-453E-A503-11906A62F9D2"></sequenceFlow>
+    <boundaryEvent id="sid-EE08FC71-5C36-443E-8687-F87D62A30A8E" name="超时未处理" attachedToRef="SSUMNRMinorVerifyreceiving1" cancelActivity="false">
+      <extensionElements>
+        <flowable:executionListener event="end" class="com.hnair.psmp.workflow.component.listener.TaskTimerListener">
+          <flowable:field name="serviceType">
+            <flowable:string><![CDATA[dealAlert]]></flowable:string>
+          </flowable:field>
+          <flowable:field name="taskDefKey">
+            <flowable:string><![CDATA[SSUMNRMinorVerifyreceiving1]]></flowable:string>
+          </flowable:field>
+          <flowable:field name="msgReceiver">
+            <flowable:string><![CDATA[candidateManager]]></flowable:string>
+          </flowable:field>
+        </flowable:executionListener>
+      </extensionElements>
+      <timerEventDefinition>
+        <timeDuration>${timeAlertProcess}</timeDuration>
+      </timerEventDefinition>
+    </boundaryEvent>
+    <sequenceFlow id="sid-FD2FAAEF-70A9-4A24-8C46-3167A54D4625" sourceRef="sid-9BD909EF-8AB3-484C-9789-4790D4A6ED2F" targetRef="SSUMNRMinortakePicture4"></sequenceFlow>
+    <sequenceFlow id="sid-A3B4AD16-503C-4AEE-9965-175CE4F01FD5" sourceRef="SSUMNRMinorVerifyreceiving1" targetRef="verifyEd"></sequenceFlow>
+    <sequenceFlow id="sid-821573D6-81AF-41FD-806B-587422D7A490" sourceRef="verifyEd" targetRef="SSUMNRMinortakePicture1"></sequenceFlow>
+    <sequenceFlow id="sid-9EC399DA-B5B0-4CC5-8B58-E0839391BA2A" sourceRef="verifyEd" targetRef="SSUMNRMinorVerifyreceiving2"></sequenceFlow>
+    <sequenceFlow id="sid-61D0B0F7-76CA-40CA-989A-B7D106527283" sourceRef="sid-7BD3EE8E-370C-4C47-B051-E107816BEC3F" targetRef="SSUMNRMinortakePicture2"></sequenceFlow>
+    <sequenceFlow id="sid-20938317-7453-463A-9668-56103AE0A023" sourceRef="sid-7BD3EE8E-370C-4C47-B051-E107816BEC3F" targetRef="SSUMNRMinorVerifyreceiving3"></sequenceFlow>
+    <sequenceFlow id="sid-3162C6D3-CF2F-42AD-B182-5FB532E0E702" sourceRef="SSUMNRMinorVerifyreceiving2" targetRef="sid-7BD3EE8E-370C-4C47-B051-E107816BEC3F"></sequenceFlow>
+    <sequenceFlow id="sid-148D773B-4644-4660-82A5-0F1010D115A6" sourceRef="SSUMNRMinorhandOver1" targetRef="sid-7BD3EE8E-370C-4C47-B051-E107816BEC3F"></sequenceFlow>
+    <sequenceFlow id="sid-CA4D939E-6F5E-4B19-A775-BDAF767A60A8" sourceRef="sid-187B7884-B7C5-4ACD-BE95-FD7876512EA6" targetRef="SSUMNRMinorVerifyreceiving4"></sequenceFlow>
+    <sequenceFlow id="sid-27580720-3ADD-4FE3-B64A-8E5D099C47F6" sourceRef="sid-187B7884-B7C5-4ACD-BE95-FD7876512EA6" targetRef="SSUMNRMinorhandOver3"></sequenceFlow>
+    <sequenceFlow id="sid-BF478054-1D19-4179-B80A-A49C97080C80" sourceRef="SSUMNRMinorhandOver3" targetRef="sid-9BD909EF-8AB3-484C-9789-4790D4A6ED2F"></sequenceFlow>
+    <sequenceFlow id="sid-0C6ECF68-091C-4E24-BF1A-E276FB00D8DD" sourceRef="SSUMNRMinorhandOver4" targetRef="sid-25BD3599-0910-453E-A503-11906A62F9D2"></sequenceFlow>
+    <sequenceFlow id="sid-06DC6284-DDEB-410F-B97B-FABF8CECD57D" sourceRef="sid-187B7884-B7C5-4ACD-BE95-FD7876512EA6" targetRef="SSUMNRMinortakePicture3"></sequenceFlow>
+    <sequenceFlow id="sid-64EED31B-89D2-4B78-BC9A-015D8B5DCEA9" sourceRef="sid-7BD3EE8E-370C-4C47-B051-E107816BEC3F" targetRef="SSUMNRMinorhandOver2"></sequenceFlow>
+    <sequenceFlow id="sid-5E7ECD9A-5E25-4076-BE34-D6CF258A951E" sourceRef="SSUMNRMinorhandOver2" targetRef="sid-187B7884-B7C5-4ACD-BE95-FD7876512EA6"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_SSUMNRMinor">
+    <bpmndi:BPMNPlane bpmnElement="SSUMNRMinor" id="BPMNPlane_SSUMNRMinor">
+      <bpmndi:BPMNShape bpmnElement="doStart" id="BPMNShape_doStart">
+        <omgdc:Bounds height="30.0" width="30.0" x="100.0" y="163.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="SSUMNRMinorVerifyreceiving1" id="BPMNShape_SSUMNRMinorVerifyreceiving1">
+        <omgdc:Bounds height="80.0" width="100.0" x="195.0" y="138.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="SSUMNRMinortakePicture1" id="BPMNShape_SSUMNRMinortakePicture1">
+        <omgdc:Bounds height="80.0" width="100.0" x="480.0" y="30.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="doEnd" id="BPMNShape_doEnd">
+        <omgdc:Bounds height="28.0" width="28.0" x="1600.0" y="641.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="SSUMNRMinorhandOver1" id="BPMNShape_SSUMNRMinorhandOver1">
+        <omgdc:Bounds height="80.0" width="100.0" x="480.0" y="138.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="SSUMNRMinorVerifyreceiving2" id="BPMNShape_SSUMNRMinorVerifyreceiving2">
+        <omgdc:Bounds height="80.0" width="100.0" x="480.0" y="255.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="SSUMNRMinorhandOver2" id="BPMNShape_SSUMNRMinorhandOver2">
+        <omgdc:Bounds height="80.0" width="100.0" x="750.0" y="195.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="SSUMNRMinortakePicture2" id="BPMNShape_SSUMNRMinortakePicture2">
+        <omgdc:Bounds height="80.0" width="100.0" x="750.0" y="105.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="SSUMNRMinorVerifyreceiving3" id="BPMNShape_SSUMNRMinorVerifyreceiving3">
+        <omgdc:Bounds height="80.0" width="100.0" x="750.0" y="300.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="SSUMNRMinortakePicture3" id="BPMNShape_SSUMNRMinortakePicture3">
+        <omgdc:Bounds height="80.0" width="100.0" x="1040.0" y="195.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="SSUMNRMinorhandOver3" id="BPMNShape_SSUMNRMinorhandOver3">
+        <omgdc:Bounds height="80.0" width="100.0" x="1040.0" y="300.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="SSUMNRMinorVerifyreceiving4" id="BPMNShape_SSUMNRMinorVerifyreceiving4">
+        <omgdc:Bounds height="80.0" width="100.0" x="1040.0" y="435.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="SSUMNRMinorhandOver4" id="BPMNShape_SSUMNRMinorhandOver4">
+        <omgdc:Bounds height="80.0" width="100.0" x="1335.0" y="495.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="SSUMNRMinortakePicture4" id="BPMNShape_SSUMNRMinortakePicture4">
+        <omgdc:Bounds height="80.0" width="100.0" x="1335.0" y="390.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="verifyEd" id="BPMNShape_verifyEd">
+        <omgdc:Bounds height="40.0" width="40.0" x="360.0" y="158.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-7BD3EE8E-370C-4C47-B051-E107816BEC3F" id="BPMNShape_sid-7BD3EE8E-370C-4C47-B051-E107816BEC3F">
+        <omgdc:Bounds height="40.0" width="40.0" x="660.0" y="215.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-187B7884-B7C5-4ACD-BE95-FD7876512EA6" id="BPMNShape_sid-187B7884-B7C5-4ACD-BE95-FD7876512EA6">
+        <omgdc:Bounds height="40.0" width="40.0" x="930.0" y="320.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-9BD909EF-8AB3-484C-9789-4790D4A6ED2F" id="BPMNShape_sid-9BD909EF-8AB3-484C-9789-4790D4A6ED2F">
+        <omgdc:Bounds height="40.0" width="40.0" x="1215.0" y="455.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-25BD3599-0910-453E-A503-11906A62F9D2" id="BPMNShape_sid-25BD3599-0910-453E-A503-11906A62F9D2">
+        <omgdc:Bounds height="40.0" width="40.0" x="1495.0" y="635.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-EE08FC71-5C36-443E-8687-F87D62A30A8E" id="BPMNShape_sid-EE08FC71-5C36-443E-8687-F87D62A30A8E">
+        <omgdc:Bounds height="31.0" width="31.0" x="261.9501439253409" y="202.8250948465405"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-64EED31B-89D2-4B78-BC9A-015D8B5DCEA9" id="BPMNEdge_sid-64EED31B-89D2-4B78-BC9A-015D8B5DCEA9">
+        <omgdi:waypoint x="699.9416944211715" y="235.0"></omgdi:waypoint>
+        <omgdi:waypoint x="749.999999999978" y="235.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-3162C6D3-CF2F-42AD-B182-5FB532E0E702" id="BPMNEdge_sid-3162C6D3-CF2F-42AD-B182-5FB532E0E702">
+        <omgdi:waypoint x="579.95" y="275.0"></omgdi:waypoint>
+        <omgdi:waypoint x="665.7142857142857" y="240.7"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-766B5FE9-E6C5-4693-8477-3780753E865F" id="BPMNEdge_sid-766B5FE9-E6C5-4693-8477-3780753E865F">
+        <omgdi:waypoint x="579.95" y="70.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1515.0" y="70.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1515.0" y="635.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-6C314929-1038-47B8-969D-E7B570BC0557" id="BPMNEdge_sid-6C314929-1038-47B8-969D-E7B570BC0557">
+        <omgdi:waypoint x="1534.939934409687" y="655.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1600.0" y="655.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-FD2FAAEF-70A9-4A24-8C46-3167A54D4625" id="BPMNEdge_sid-FD2FAAEF-70A9-4A24-8C46-3167A54D4625">
+        <omgdi:waypoint x="1254.9334026622296" y="475.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1295.0" y="475.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1295.0" y="430.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1335.0" y="430.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-148D773B-4644-4660-82A5-0F1010D115A6" id="BPMNEdge_sid-148D773B-4644-4660-82A5-0F1010D115A6">
+        <omgdi:waypoint x="579.95" y="196.98100000000002"></omgdi:waypoint>
+        <omgdi:waypoint x="665.4869628198937" y="229.4927536231884"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-DBF5FA80-D632-42E4-942B-DCBFCCFB3D46" id="BPMNEdge_sid-DBF5FA80-D632-42E4-942B-DCBFCCFB3D46">
+        <omgdi:waypoint x="1139.95" y="235.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1515.0" y="235.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1515.0" y="635.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-96D059C1-C487-4192-8903-311BBDC0D4BE" id="BPMNEdge_sid-96D059C1-C487-4192-8903-311BBDC0D4BE">
+        <omgdi:waypoint x="1434.95" y="430.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1515.0" y="430.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1515.0" y="635.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-27580720-3ADD-4FE3-B64A-8E5D099C47F6" id="BPMNEdge_sid-27580720-3ADD-4FE3-B64A-8E5D099C47F6">
+        <omgdi:waypoint x="969.9428800855077" y="340.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1040.0" y="340.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-0C6ECF68-091C-4E24-BF1A-E276FB00D8DD" id="BPMNEdge_sid-0C6ECF68-091C-4E24-BF1A-E276FB00D8DD">
+        <omgdi:waypoint x="1385.0" y="574.95"></omgdi:waypoint>
+        <omgdi:waypoint x="1385.0" y="655.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1495.0" y="655.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-BF478054-1D19-4179-B80A-A49C97080C80" id="BPMNEdge_sid-BF478054-1D19-4179-B80A-A49C97080C80">
+        <omgdi:waypoint x="1139.95" y="340.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1235.0" y="340.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1235.0" y="455.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-A3B4AD16-503C-4AEE-9965-175CE4F01FD5" id="BPMNEdge_sid-A3B4AD16-503C-4AEE-9965-175CE4F01FD5">
+        <omgdi:waypoint x="294.95000000000005" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="360.0" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-CA4D939E-6F5E-4B19-A775-BDAF767A60A8" id="BPMNEdge_sid-CA4D939E-6F5E-4B19-A775-BDAF767A60A8">
+        <omgdi:waypoint x="950.0" y="359.94261658031087"></omgdi:waypoint>
+        <omgdi:waypoint x="950.0" y="475.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1040.0" y="475.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-5443949C-F9CA-4202-BCB5-223F90BA63B3" id="BPMNEdge_sid-5443949C-F9CA-4202-BCB5-223F90BA63B3">
+        <omgdi:waypoint x="1139.95" y="475.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1215.0" y="475.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-61D0B0F7-76CA-40CA-989A-B7D106527283" id="BPMNEdge_sid-61D0B0F7-76CA-40CA-989A-B7D106527283">
+        <omgdi:waypoint x="680.0" y="215.0"></omgdi:waypoint>
+        <omgdi:waypoint x="680.0" y="145.0"></omgdi:waypoint>
+        <omgdi:waypoint x="749.999999999978" y="145.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-821573D6-81AF-41FD-806B-587422D7A490" id="BPMNEdge_sid-821573D6-81AF-41FD-806B-587422D7A490">
+        <omgdi:waypoint x="380.0" y="158.0"></omgdi:waypoint>
+        <omgdi:waypoint x="380.0" y="70.0"></omgdi:waypoint>
+        <omgdi:waypoint x="480.0" y="70.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-20938317-7453-463A-9668-56103AE0A023" id="BPMNEdge_sid-20938317-7453-463A-9668-56103AE0A023">
+        <omgdi:waypoint x="679.4444444444445" y="254.3958333333334"></omgdi:waypoint>
+        <omgdi:waypoint x="677.0" y="340.0"></omgdi:waypoint>
+        <omgdi:waypoint x="750.0" y="340.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-5E7ECD9A-5E25-4076-BE34-D6CF258A951E" id="BPMNEdge_sid-5E7ECD9A-5E25-4076-BE34-D6CF258A951E">
+        <omgdi:waypoint x="849.9499999999999" y="235.0"></omgdi:waypoint>
+        <omgdi:waypoint x="950.0" y="235.0"></omgdi:waypoint>
+        <omgdi:waypoint x="950.0" y="320.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-9EC399DA-B5B0-4CC5-8B58-E0839391BA2A" id="BPMNEdge_sid-9EC399DA-B5B0-4CC5-8B58-E0839391BA2A">
+        <omgdi:waypoint x="380.33529411764704" y="197.60661209068016"></omgdi:waypoint>
+        <omgdi:waypoint x="382.0" y="295.0"></omgdi:waypoint>
+        <omgdi:waypoint x="479.9999999999483" y="295.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-F5DFB401-A1EF-45A7-8056-1311D1624429" id="BPMNEdge_sid-F5DFB401-A1EF-45A7-8056-1311D1624429">
+        <omgdi:waypoint x="849.9499999999999" y="340.0"></omgdi:waypoint>
+        <omgdi:waypoint x="930.0" y="340.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-3DA2E0FA-D41F-4207-87FA-FB26E84C52E6" id="BPMNEdge_sid-3DA2E0FA-D41F-4207-87FA-FB26E84C52E6">
+        <omgdi:waypoint x="1235.0" y="494.93340266222975"></omgdi:waypoint>
+        <omgdi:waypoint x="1235.0" y="535.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1335.0" y="535.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-B442584D-8E50-4C0C-8EFA-9495BE07C2AC" id="BPMNEdge_sid-B442584D-8E50-4C0C-8EFA-9495BE07C2AC">
+        <omgdi:waypoint x="849.9499999999999" y="145.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1515.0" y="145.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1515.0" y="635.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-06DC6284-DDEB-410F-B97B-FABF8CECD57D" id="BPMNEdge_sid-06DC6284-DDEB-410F-B97B-FABF8CECD57D">
+        <omgdi:waypoint x="961.4" y="331.4285714285714"></omgdi:waypoint>
+        <omgdi:waypoint x="1040.0" y="272.4625"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-375CA294-0F9E-4EEC-AC8D-5D53B7AD0F8E" id="BPMNEdge_sid-375CA294-0F9E-4EEC-AC8D-5D53B7AD0F8E">
+        <omgdi:waypoint x="129.94999891869114" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="194.99999999999022" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-0D28A301-8B3A-48EE-9DCC-C5DC8EFF9798" id="BPMNEdge_sid-0D28A301-8B3A-48EE-9DCC-C5DC8EFF9798">
+        <omgdi:waypoint x="399.943354430356" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="479.99999999993634" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="second_approve" name="二级审批流程" isExecutable="true">
+    <documentation>二级审批流程</documentation>
+    <startEvent id="startEvent" name="开始" flowable:formFieldValidation="true">
+      <documentation>开始</documentation>
+    </startEvent>
+    <userTask id="submitForm" name="填写审批信息" flowable:formFieldValidation="true">
+      <documentation>填写审批信息</documentation>
+      <extensionElements>
+        <flowable:formProperty id="message" name="申请信息" type="string" required="true"></flowable:formProperty>
+        <flowable:formProperty id="name" name="申请人姓名" type="string" required="true"></flowable:formProperty>
+        <flowable:formProperty id="submitTime" name="提交时间" type="date" datePattern="yyyy-MM-dd" required="true"></flowable:formProperty>
+        <flowable:formProperty id="confirm" name="确认申请" type="string" required="true"></flowable:formProperty>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-3D6F1A09-6CF6-4E9B-BC7A-8B8F351D9434" sourceRef="startEvent" targetRef="submitForm"></sequenceFlow>
+    <exclusiveGateway id="decideSubmit" name="确认提交">
+      <documentation>确认提交</documentation>
+    </exclusiveGateway>
+    <sequenceFlow id="sid-4E0E1DB9-F2B8-496E-A37F-E9573EE1FE69" sourceRef="submitForm" targetRef="decideSubmit"></sequenceFlow>
+    <userTask id="tlApprove" name="主管审批" flowable:formFieldValidation="true">
+      <documentation>主管审批</documentation>
+      <extensionElements>
+        <flowable:formProperty id="tlApprove" name="主管审批结果" type="string" required="true"></flowable:formProperty>
+        <flowable:formProperty id="tlMessage" name="主管备注" type="string" required="true"></flowable:formProperty>
+      </extensionElements>
+    </userTask>
+    <endEvent id="endEventCancel" name="取消">
+      <documentation>取消</documentation>
+    </endEvent>
+    <exclusiveGateway id="decideTLApprove" name="主管审批校验">
+      <documentation>主管审批校验</documentation>
+    </exclusiveGateway>
+    <userTask id="hrApprove" name="人事审批" flowable:formFieldValidation="true">
+      <documentation>人事审批</documentation>
+      <extensionElements>
+        <flowable:formProperty id="hrApprove" name="人事审批结果" type="string" required="true"></flowable:formProperty>
+        <flowable:formProperty id="hrMessage" name="人事备注" type="string" required="true"></flowable:formProperty>
+      </extensionElements>
+    </userTask>
+    <exclusiveGateway id="decideHRApprove" name="人事审批校验">
+      <documentation>人事审批校验</documentation>
+    </exclusiveGateway>
+    <endEvent id="endEvent" name="结束">
+      <documentation>结束</documentation>
+    </endEvent>
+    <sequenceFlow id="sid-CDD93DFC-DB7F-421B-927C-E894EB1E5001" sourceRef="tlApprove" targetRef="decideTLApprove"></sequenceFlow>
+    <sequenceFlow id="sid-519E289A-B59A-476B-90A3-78F92154C404" sourceRef="hrApprove" targetRef="decideHRApprove"></sequenceFlow>
+    <sequenceFlow id="sid-869CBF83-37DC-4BF8-B635-24FF2125092C" sourceRef="decideTLApprove" targetRef="submitForm">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${tlApprove== "N" || tlApprove== "n"}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-24D03FE3-963F-4BCD-831A-F3429C6C4956" sourceRef="decideTLApprove" targetRef="hrApprove">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${tlApprove== "Y" || tlApprove== "y"}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-421DCD06-8922-4663-8E57-34B07A393ED5" sourceRef="decideHRApprove" targetRef="endEvent">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${hrApprove== "Y" || hrApprove== "y"}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-00A10476-320B-41C2-952A-14A43E78BC00" sourceRef="decideHRApprove" targetRef="submitForm">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${hrApprove== "N" || hrApprove== "n"}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-E81676CC-C615-4DE4-A979-A483D40EEB29" sourceRef="decideSubmit" targetRef="tlApprove">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${confirm == "Y" || confirm == "y"}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-E767B044-EB8D-4321-8EB7-C16CC59A98F8" sourceRef="decideSubmit" targetRef="endEventCancel">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${confirm == "N" || confirm == "n"}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_second_approve">
+    <bpmndi:BPMNPlane bpmnElement="second_approve" id="BPMNPlane_second_approve">
+      <bpmndi:BPMNShape bpmnElement="startEvent" id="BPMNShape_startEvent">
+        <omgdc:Bounds height="30.0" width="30.0" x="100.0" y="162.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="submitForm" id="BPMNShape_submitForm">
+        <omgdc:Bounds height="84.0" width="106.0" x="210.0" y="135.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="decideSubmit" id="BPMNShape_decideSubmit">
+        <omgdc:Bounds height="40.0" width="40.0" x="390.0" y="158.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="tlApprove" id="BPMNShape_tlApprove">
+        <omgdc:Bounds height="80.0" width="100.0" x="510.0" y="137.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endEventCancel" id="BPMNShape_endEventCancel">
+        <omgdc:Bounds height="28.0" width="28.0" x="546.0" y="60.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="decideTLApprove" id="BPMNShape_decideTLApprove">
+        <omgdc:Bounds height="40.0" width="40.0" x="690.0" y="157.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="hrApprove" id="BPMNShape_hrApprove">
+        <omgdc:Bounds height="80.0" width="100.0" x="810.0" y="135.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="decideHRApprove" id="BPMNShape_decideHRApprove">
+        <omgdc:Bounds height="40.0" width="40.0" x="960.0" y="155.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endEvent" id="BPMNShape_endEvent">
+        <omgdc:Bounds height="28.0" width="28.0" x="1050.0" y="161.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-00A10476-320B-41C2-952A-14A43E78BC00" id="BPMNEdge_sid-00A10476-320B-41C2-952A-14A43E78BC00">
+        <omgdi:waypoint x="980.5" y="155.5"></omgdi:waypoint>
+        <omgdi:waypoint x="980.5" y="34.0"></omgdi:waypoint>
+        <omgdi:waypoint x="263.0" y="34.0"></omgdi:waypoint>
+        <omgdi:waypoint x="263.0" y="135.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-24D03FE3-963F-4BCD-831A-F3429C6C4956" id="BPMNEdge_sid-24D03FE3-963F-4BCD-831A-F3429C6C4956">
+        <omgdi:waypoint x="729.7656186267827" y="177.17687074829934"></omgdi:waypoint>
+        <omgdi:waypoint x="809.9999999999991" y="175.83528428093643"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-E767B044-EB8D-4321-8EB7-C16CC59A98F8" id="BPMNEdge_sid-E767B044-EB8D-4321-8EB7-C16CC59A98F8">
+        <omgdi:waypoint x="410.5" y="158.5"></omgdi:waypoint>
+        <omgdi:waypoint x="410.5" y="74.0"></omgdi:waypoint>
+        <omgdi:waypoint x="546.0" y="74.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-519E289A-B59A-476B-90A3-78F92154C404" id="BPMNEdge_sid-519E289A-B59A-476B-90A3-78F92154C404">
+        <omgdi:waypoint x="909.9499999999999" y="175.0"></omgdi:waypoint>
+        <omgdi:waypoint x="960.0" y="175.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-421DCD06-8922-4663-8E57-34B07A393ED5" id="BPMNEdge_sid-421DCD06-8922-4663-8E57-34B07A393ED5">
+        <omgdi:waypoint x="999.5526173285176" y="175.3855421686747"></omgdi:waypoint>
+        <omgdi:waypoint x="1050.0002432053427" y="175.08353165235738"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-3D6F1A09-6CF6-4E9B-BC7A-8B8F351D9434" id="BPMNEdge_sid-3D6F1A09-6CF6-4E9B-BC7A-8B8F351D9434">
+        <omgdi:waypoint x="129.94999916563808" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="210.0" y="177.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-CDD93DFC-DB7F-421B-927C-E894EB1E5001" id="BPMNEdge_sid-CDD93DFC-DB7F-421B-927C-E894EB1E5001">
+        <omgdi:waypoint x="609.9499999998727" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="690.0" y="177.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-E81676CC-C615-4DE4-A979-A483D40EEB29" id="BPMNEdge_sid-E81676CC-C615-4DE4-A979-A483D40EEB29">
+        <omgdi:waypoint x="429.63553342336263" y="178.30743243243242"></omgdi:waypoint>
+        <omgdi:waypoint x="510.0" y="177.50117056856186"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-4E0E1DB9-F2B8-496E-A37F-E9573EE1FE69" id="BPMNEdge_sid-4E0E1DB9-F2B8-496E-A37F-E9573EE1FE69">
+        <omgdi:waypoint x="315.94999999999646" y="177.36020408163265"></omgdi:waypoint>
+        <omgdi:waypoint x="390.0925050641458" y="177.86486486486487"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-869CBF83-37DC-4BF8-B635-24FF2125092C" id="BPMNEdge_sid-869CBF83-37DC-4BF8-B635-24FF2125092C">
+        <omgdi:waypoint x="710.5" y="196.44239566613163"></omgdi:waypoint>
+        <omgdi:waypoint x="710.5" y="302.0"></omgdi:waypoint>
+        <omgdi:waypoint x="263.0" y="302.0"></omgdi:waypoint>
+        <omgdi:waypoint x="263.0" y="218.95000000000002"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

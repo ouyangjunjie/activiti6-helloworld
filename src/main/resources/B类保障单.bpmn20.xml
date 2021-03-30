@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="uncom" name="B类保障单" isExecutable="true">
+    <startEvent id="startEvent1" flowable:formFieldValidation="true"/>
+    <userTask id="uncomVerifyreceiving1" name="验证接收送休息室" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="candidateUser" type="string" expression="${userVerify}"/>
+        <flowable:formProperty id="candidatePhone" type="string" expression="${userPhoneVerify}"/>
+        <flowable:formProperty id="candidateManager" type="string" expression="${managerVerify}"/>
+        <flowable:formProperty id="managerPhone" type="string" expression="${managerPhoneVerify}"/>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-E16B1B63-DE93-4EF4-BF75-92D2C02E5191" sourceRef="startEvent1" targetRef="uncomVerifyreceiving1"/>
+    <parallelGateway id="sid-E160D216-85E6-4069-9F0A-49F70C054F37" name="验证通过"/>
+    <sequenceFlow id="sid-71AF62B4-5193-4B8A-9BA5-7EC353C93A24" sourceRef="uncomVerifyreceiving1" targetRef="sid-E160D216-85E6-4069-9F0A-49F70C054F37"/>
+    <userTask id="uncomVerifyreceiving2" name="安检、候机、登机" flowable:category="ifs" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="candidateUser" type="string" expression="${userTakeIn}"/>
+        <flowable:formProperty id="candidatePhone" type="string" expression="${userPhoneTakeIn}"/>
+        <flowable:formProperty id="candidateManager" type="string" expression="${managerTakeIn}"/>
+        <flowable:formProperty id="managerPhone" type="string" expression="${managerPhoneTakeIn}"/>
+      </extensionElements>
+      <documentation>安检、候机、登机</documentation>
+    </userTask>
+    <userTask id="uncomhandOver1" name="送休息室移交旅客" flowable:category="ifs" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="candidateUserByTask" type="string" default="uncomVerifyreceiving1"/>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-A1E7A1C4-20EB-4DA0-A54E-3E3070DDA1F5" sourceRef="sid-E160D216-85E6-4069-9F0A-49F70C054F37" targetRef="uncomhandOver1"/>
+    <parallelGateway id="sid-CEBD5F42-E5BF-411B-8A4E-034DB9A0135F" name="登机成功"/>
+    <userTask id="uncomhandOver2" name="旅客移交乘务" flowable:category="ifs" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="candidateUserByTask" type="string" default="uncomVerifyreceiving2"/>
+      </extensionElements>
+    </userTask>
+    <userTask id="uncomVerifyreceiving3" name="机上照料旅客" flowable:category="ifs" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="candidateUser" type="string" expression="${userTakeCareOf}"/>
+        <flowable:formProperty id="candidatePhone" type="string" expression="${userPhoneTakeCareOf}"/>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-136A8357-7CB8-4C29-9EA2-993D2424093A" sourceRef="uncomVerifyreceiving2" targetRef="sid-CEBD5F42-E5BF-411B-8A4E-034DB9A0135F"/>
+    <sequenceFlow id="sid-47A0003E-A49A-4FC5-8765-B7493A5FD1C6" sourceRef="uncomhandOver1" targetRef="sid-CEBD5F42-E5BF-411B-8A4E-034DB9A0135F"/>
+    <sequenceFlow id="sid-357D0E51-666D-4CAA-95D6-AAA492C5B69F" sourceRef="sid-CEBD5F42-E5BF-411B-8A4E-034DB9A0135F" targetRef="uncomhandOver2"/>
+    <parallelGateway id="sid-4089E2D5-0DC9-4E70-B919-8C7CBE1D41FE" name="准备落地"/>
+    <userTask id="umcomhandOver3" name="旅客移交目的站地服" flowable:category="ifs" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="candidateUserByTask" type="string" default="uncomVerifyreceiving3"/>
+      </extensionElements>
+    </userTask>
+    <userTask id="uncomVerifyreceiving4" name="接旅客下机" flowable:category="ifs" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="candidateUser" type="string" expression="${userTakeOff}"/>
+        <flowable:formProperty id="candidatePhone" type="string" expression="${userPhoneTakeOff}"/>
+        <flowable:formProperty id="candidateManager" type="string" expression="${managerTakeOff}"/>
+        <flowable:formProperty id="managerPhone" type="string" expression="${managerPhoneTakeOff}"/>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-4A52D8A2-99FE-478B-9AD8-C2463AC7B3F8" sourceRef="uncomhandOver2" targetRef="sid-4089E2D5-0DC9-4E70-B919-8C7CBE1D41FE"/>
+    <sequenceFlow id="sid-A9A7EEE1-4749-4F9D-9F9A-9FED6882CED0" sourceRef="uncomVerifyreceiving3" targetRef="sid-4089E2D5-0DC9-4E70-B919-8C7CBE1D41FE"/>
+    <sequenceFlow id="sid-87215766-979B-4797-9447-DC871B1BA0AC" sourceRef="sid-4089E2D5-0DC9-4E70-B919-8C7CBE1D41FE" targetRef="umcomhandOver3"/>
+    <parallelGateway id="sid-2863AF9C-3A21-4C2E-97AC-0386220400A1" name="落地交接"/>
+    <userTask id="uncomhandOver4" name="交到接机人" flowable:category="ifs" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="candidateUserByTask" type="string" default="uncomVerifyreceiving4"/>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="sid-2AE0605C-00BB-4A6F-99B5-F66C9E3BFA8F" sourceRef="umcomhandOver3" targetRef="sid-2863AF9C-3A21-4C2E-97AC-0386220400A1"/>
+    <sequenceFlow id="sid-BCEFB38F-790B-49FC-B204-51C269628ED1" sourceRef="uncomVerifyreceiving4" targetRef="sid-2863AF9C-3A21-4C2E-97AC-0386220400A1"/>
+    <sequenceFlow id="sid-44E3FD21-CFB6-45F0-B2E2-64DEABC35924" sourceRef="sid-2863AF9C-3A21-4C2E-97AC-0386220400A1" targetRef="uncomhandOver4"/>
+    <endEvent id="sid-E43B4A4C-4B55-4395-A4AC-9352FD07A124"/>
+    <sequenceFlow id="sid-22293883-3BC4-4953-B95E-BACE087A7C1E" sourceRef="sid-E160D216-85E6-4069-9F0A-49F70C054F37" targetRef="uncomVerifyreceiving2"/>
+    <sequenceFlow id="sid-E7667E6C-42A1-4FB2-A22A-8592D45E3291" sourceRef="sid-CEBD5F42-E5BF-411B-8A4E-034DB9A0135F" targetRef="uncomVerifyreceiving3"/>
+    <sequenceFlow id="sid-91EB9984-7AB5-4798-B8F3-E2A3F6CDA7B0" sourceRef="sid-4089E2D5-0DC9-4E70-B919-8C7CBE1D41FE" targetRef="uncomVerifyreceiving4"/>
+    <sequenceFlow id="sid-CE611ACC-1206-4BE4-90CC-E56F9144411A" sourceRef="uncomhandOver4" targetRef="sid-E43B4A4C-4B55-4395-A4AC-9352FD07A124"/>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_uncom">
+    <bpmndi:BPMNPlane bpmnElement="uncom" id="BPMNPlane_uncom">
+      <bpmndi:BPMNShape bpmnElement="startEvent1" id="BPMNShape_startEvent1">
+        <omgdc:Bounds height="30.0" width="30.0" x="100.0" y="163.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="uncomVerifyreceiving1" id="BPMNShape_uncomVerifyreceiving1">
+        <omgdc:Bounds height="80.0" width="100.0" x="165.0" y="135.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-E160D216-85E6-4069-9F0A-49F70C054F37" id="BPMNShape_sid-E160D216-85E6-4069-9F0A-49F70C054F37">
+        <omgdc:Bounds height="40.0" width="40.0" x="312.5" y="156.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="uncomVerifyreceiving2" id="BPMNShape_uncomVerifyreceiving2">
+        <omgdc:Bounds height="80.0" width="100.0" x="405.0" y="255.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="uncomhandOver1" id="BPMNShape_uncomhandOver1">
+        <omgdc:Bounds height="80.0" width="100.0" x="405.0" y="136.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-CEBD5F42-E5BF-411B-8A4E-034DB9A0135F" id="BPMNShape_sid-CEBD5F42-E5BF-411B-8A4E-034DB9A0135F">
+        <omgdc:Bounds height="40.0" width="40.0" x="540.0" y="225.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="uncomhandOver2" id="BPMNShape_uncomhandOver2">
+        <omgdc:Bounds height="80.0" width="100.0" x="630.0" y="205.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="uncomVerifyreceiving3" id="BPMNShape_uncomVerifyreceiving3">
+        <omgdc:Bounds height="80.0" width="100.0" x="630.0" y="338.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-4089E2D5-0DC9-4E70-B919-8C7CBE1D41FE" id="BPMNShape_sid-4089E2D5-0DC9-4E70-B919-8C7CBE1D41FE">
+        <omgdc:Bounds height="40.0" width="40.0" x="750.0" y="255.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="umcomhandOver3" id="BPMNShape_umcomhandOver3">
+        <omgdc:Bounds height="80.0" width="100.0" x="855.0" y="235.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="uncomVerifyreceiving4" id="BPMNShape_uncomVerifyreceiving4">
+        <omgdc:Bounds height="80.0" width="100.0" x="855.0" y="338.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-2863AF9C-3A21-4C2E-97AC-0386220400A1" id="BPMNShape_sid-2863AF9C-3A21-4C2E-97AC-0386220400A1">
+        <omgdc:Bounds height="40.0" width="40.0" x="1020.0" y="298.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="uncomhandOver4" id="BPMNShape_uncomhandOver4">
+        <omgdc:Bounds height="80.0" width="100.0" x="990.0" y="405.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-E43B4A4C-4B55-4395-A4AC-9352FD07A124" id="BPMNShape_sid-E43B4A4C-4B55-4395-A4AC-9352FD07A124">
+        <omgdc:Bounds height="28.0" width="28.0" x="1026.0" y="525.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-E16B1B63-DE93-4EF4-BF75-92D2C02E5191" id="BPMNEdge_sid-E16B1B63-DE93-4EF4-BF75-92D2C02E5191">
+        <omgdi:waypoint x="129.94340692927761" y="177.55019845363262"/>
+        <omgdi:waypoint x="164.99999999999906" y="176.4985"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-22293883-3BC4-4953-B95E-BACE087A7C1E" id="BPMNEdge_sid-22293883-3BC4-4953-B95E-BACE087A7C1E">
+        <omgdi:waypoint x="333.0" y="195.44201096121415"/>
+        <omgdi:waypoint x="333.0" y="295.0"/>
+        <omgdi:waypoint x="404.99999999995924" y="295.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-87215766-979B-4797-9447-DC871B1BA0AC" id="BPMNEdge_sid-87215766-979B-4797-9447-DC871B1BA0AC">
+        <omgdi:waypoint x="789.5135906040264" y="275.429104477612"/>
+        <omgdi:waypoint x="854.9999999999889" y="275.185687732342"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-BCEFB38F-790B-49FC-B204-51C269628ED1" id="BPMNEdge_sid-BCEFB38F-790B-49FC-B204-51C269628ED1">
+        <omgdi:waypoint x="954.9499999999999" y="355.77777777777777"/>
+        <omgdi:waypoint x="1026.1538461538462" y="324.1384615384615"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-2AE0605C-00BB-4A6F-99B5-F66C9E3BFA8F" id="BPMNEdge_sid-2AE0605C-00BB-4A6F-99B5-F66C9E3BFA8F">
+        <omgdi:waypoint x="954.9499999999998" y="290.90999999999997"/>
+        <omgdi:waypoint x="1024.8085345311622" y="313.1685393258427"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-A1E7A1C4-20EB-4DA0-A54E-3E3070DDA1F5" id="BPMNEdge_sid-A1E7A1C4-20EB-4DA0-A54E-3E3070DDA1F5">
+        <omgdi:waypoint x="352.0201274671053" y="176.4218106995885"/>
+        <omgdi:waypoint x="404.99999999999284" y="176.2047131147541"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-136A8357-7CB8-4C29-9EA2-993D2424093A" id="BPMNEdge_sid-136A8357-7CB8-4C29-9EA2-993D2424093A">
+        <omgdi:waypoint x="504.95" y="271.1904761904762"/>
+        <omgdi:waypoint x="546.4516129032259" y="251.43548387096777"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-A9A7EEE1-4749-4F9D-9F9A-9FED6882CED0" id="BPMNEdge_sid-A9A7EEE1-4749-4F9D-9F9A-9FED6882CED0">
+        <omgdi:waypoint x="714.9077669902913" y="338.0"/>
+        <omgdi:waypoint x="760.6735751295337" y="285.64689119170987"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-71AF62B4-5193-4B8A-9BA5-7EC353C93A24" id="BPMNEdge_sid-71AF62B4-5193-4B8A-9BA5-7EC353C93A24">
+        <omgdi:waypoint x="264.95000000000005" y="175.42510638297873"/>
+        <omgdi:waypoint x="312.62795109612136" y="175.831223628692"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-47A0003E-A49A-4FC5-8765-B7493A5FD1C6" id="BPMNEdge_sid-47A0003E-A49A-4FC5-8765-B7493A5FD1C6">
+        <omgdi:waypoint x="504.95000000000005" y="208.82428571428574"/>
+        <omgdi:waypoint x="547.9218839747272" y="237.06896551724134"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-E7667E6C-42A1-4FB2-A22A-8592D45E3291" id="BPMNEdge_sid-E7667E6C-42A1-4FB2-A22A-8592D45E3291">
+        <omgdi:waypoint x="560.5" y="264.44285444947207"/>
+        <omgdi:waypoint x="560.5" y="378.0"/>
+        <omgdi:waypoint x="629.9999999998391" y="378.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-91EB9984-7AB5-4798-B8F3-E2A3F6CDA7B0" id="BPMNEdge_sid-91EB9984-7AB5-4798-B8F3-E2A3F6CDA7B0">
+        <omgdi:waypoint x="770.5" y="294.44076510721254"/>
+        <omgdi:waypoint x="770.5" y="378.0"/>
+        <omgdi:waypoint x="855.0" y="378.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-357D0E51-666D-4CAA-95D6-AAA492C5B69F" id="BPMNEdge_sid-357D0E51-666D-4CAA-95D6-AAA492C5B69F">
+        <omgdi:waypoint x="579.5215994962153" y="245.42016806722694"/>
+        <omgdi:waypoint x="629.9999999999989" y="245.20899581589956"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-44E3FD21-CFB6-45F0-B2E2-64DEABC35924" id="BPMNEdge_sid-44E3FD21-CFB6-45F0-B2E2-64DEABC35924">
+        <omgdi:waypoint x="1040.4246031746031" y="337.5176249008723"/>
+        <omgdi:waypoint x="1040.1579051383399" y="405.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-CE611ACC-1206-4BE4-90CC-E56F9144411A" id="BPMNEdge_sid-CE611ACC-1206-4BE4-90CC-E56F9144411A">
+        <omgdi:waypoint x="1040.0" y="484.95000000000005"/>
+        <omgdi:waypoint x="1040.0" y="525.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-4A52D8A2-99FE-478B-9AD8-C2463AC7B3F8" id="BPMNEdge_sid-4A52D8A2-99FE-478B-9AD8-C2463AC7B3F8">
+        <omgdi:waypoint x="729.9499999999999" y="261.65"/>
+        <omgdi:waypoint x="754.9791840133222" y="270.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
